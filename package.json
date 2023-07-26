@@ -1,0 +1,26 @@
+{
+  "name": "typetrace",
+  "version": "1.0.0",
+  "description": "Raytracer in TypeScript",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc-bundle src/index.ts --outFile dist/bundle.js --target es5 && cp static/index.html dist/index.html",
+    "run": "nodemon --exec \"npm run build && python -m http.server -d dist -b 127.0.0.1\" -e ts,html,css --watch src --watch static",
+    "test": "./node_modules/.bin/cucumber-js -p default"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cucumber/cucumber": "^9.3.0",
+    "@types/chai": "^4.3.5",
+    "@types/cucumber": "^7.0.0",
+    "chai": "^4.3.7",
+    "cucumber-pretty": "^6.0.1",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript-bundle": "^1.0.18"
+  },
+  "dependencies": {
+    "typescript": "^5.1.6"
+  }
+}
