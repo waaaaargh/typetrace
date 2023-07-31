@@ -64,4 +64,8 @@ export class Tuple {
   dotproduct(t: Tuple): number {
     return this.x * t.x + this.y * t.y + this.z * t.z + this.w * this.z
   }
+
+  schurproduct(t: Tuple): Tuple {
+    return new Tuple(this.x * t.x, this.y * t.y, this.z * t.z, this.w * t.w)
+  }
 }

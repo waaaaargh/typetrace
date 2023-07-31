@@ -4,6 +4,7 @@ import { Tuple } from '../src/geomatry/tuple';
 import { assert } from 'chai';
 import { Point, isPoint } from '../src/geomatry/point';
 import { Vector, isVector } from '../src/geomatry/vector';
+import { Color } from '../src/geomatry/color';
 
 var a: Tuple
 
@@ -180,3 +181,48 @@ Then('cross\\(a, b) = vector\\({float}, {float}, {float})', function (float, flo
 Then('cross\\(b, a) = vector\\({float}, {float}, {float})', function (float, float2, float3) {
   assert(bv.crossproduct(av).isEqualTo(new Vector(float, float2, float3)))
 })
+
+var c: Color
+
+Given('c ← color\\({float}, {float}, {float})', function (float, float2, float3) {
+  c = new Color(float, float2, float3);
+});
+
+Then('c.red = {float}', function (float) {
+  assert(c.red  == float)
+});
+
+Then('c.green = {float}', function (float) {
+  assert(c.green == float)
+});
+
+Then('c.blue = {float}', function (float) {
+  assert(c.blue == float)
+});
+
+var c1: Color, c2: Color
+
+Given('c1 ← color\\({float}, {float}, {float})', function (float, float2, float3) {
+  c1 = new Color(float, float2, float3)
+});
+
+Given('c2 ← color\\({float}, {float}, {float})', function (float, float2, float3) {
+  c2 = new Color(float, float2, float3)
+});
+
+Then('c1 - c2 = color\\({float}, {float}, {float})', function (float, float2, float3) {
+  assert((c1.subtract(c2)).isEqualTo(new Color(float, float2, float3)), `${c1.subtract(c2) as Color} != ${new Color(float, float2, float3)}`)
+});
+
+Then('c1 + c2 = color\\({float}, {float}, {float})', function (float, float2, float3) {
+  assert((c1.add(c2)).isEqualTo(new Color(float, float2, float3)), `${c1.add(c2) as Color} != ${new Color(float, float2, float3)}`)
+});
+
+Then('c * {float} = color\\({float}, {float}, {float})', function (float, float2, float3, float4) {
+  assert((c.multiply(float)).isEqualTo(new Color(float2, float3, float4)), `${c.multiply(float) as Color} != ${new Color(float2, float3, float4)}`)
+});
+
+Then('c1 * c2 = color\\({float}, {float}, {float})', function (float, float2, float3) {
+  assert(c1.schurproduct(c2).isEqualTo(new Color(float, float2, float3)), `${c1.schurproduct(c2) as Color} != ${new Color(float, float2, float3)}`)
+});
+
