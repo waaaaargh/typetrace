@@ -12,15 +12,17 @@ export class Matrix {
     this.numbers = new Array(m)
 
     for(let i = 0; i < m; i += 1) {
-      this.numbers[i] = new Array(n)
+      this.numbers[i] = new Array(n).fill(0)
     }
   }
 
   transpose(): Matrix {
-    let res = new Matrix(this.dimension[1], this.dimension[0])
+    let res = new Matrix(this.n, this.m)
 
     for(let i = 0; i < res.m; i++) {
-      res.numbers[i] = res.column(i)
+      for(let j = 0; j < res.n; j++) {
+        res.numbers[i][j] = this.numbers[j][i]
+      }
     }
 
     return res
@@ -79,6 +81,69 @@ export class Matrix {
     }
 
     return result
+  }
+
+  multiplyScalar(b: number): Matrix {
+    let result = new Matrix(this.m, this.n)
+
+    result.numbers = this.numbers.map(function(row) {
+      return row.map(function(value) {
+        return value * b
+      })
+    })
+
+    return result
+  }
+
+  get determinant(): number {
+    if(this.m == 2 && this.n == 2) {
+      return this.numbers[0][0] * this.numbers[1][1] - this.numbers[0][1] * this.numbers[1][0]
+    }
+
+    let acc = 0
+    for(let i = 0; i < this.n; i++) {
+      acc += this.numbers[0][i] * this.cofactor(0, i)
+    }
+
+    return acc
+  }
+
+  submatrix(m: number, n: number) {
+    let res = new Matrix(this.m - 1, this.n - 1)
+
+    res.numbers = this.numbers.filter(function(_, index: number): boolean {
+      return index != m
+    }).map(function(value: number[], index: number) {
+      return value.filter(function(_, index: number) {
+        return index != n
+      })
+    })
+
+    return res
+  }
+
+  minor(m: number, n: number): number {
+    return this.submatrix(m, n).determinant
+  }
+
+  cofactor(m: number, n: number): number {
+    return (m + n) % 2 == 0 ? this.minor(m, n) : this.minor(m, n) * -1
+  }
+
+  get invertible(): boolean {
+    return this.determinant != 0
+  }
+
+  invert(): Matrix {
+    let cofactorMatrix = new Matrix(this.m, this.n)
+
+    for(let i = 0; i < cofactorMatrix.m; i++) {
+      for(let j = 0; j < cofactorMatrix.n; j++) {
+        cofactorMatrix.numbers[i][j] = this.cofactor(i, j)
+      }
+    }
+
+    return cofactorMatrix.transpose().multiplyScalar(1/this.determinant)
   }
 
   static fromTuple(t: Tuple, column: boolean = false): Matrix {

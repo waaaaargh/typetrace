@@ -2,7 +2,7 @@ import { DataTable, Given, Then, World } from '@cucumber/cucumber';
 import { assert } from 'chai';
 
 import { Matrix } from '../src/geomatry/matrix';
-import { Tuple } from '../src/geomatry/tuple';
+import { Tuple, epsilon } from '../src/geomatry/tuple';
 
 var M: Matrix
 
@@ -113,4 +113,114 @@ Given('A ← transpose\\(identity_matrix)', function () {
 
 Then('A = identity_matrix', function () {
   assert(A.isEqual(Matrix.identity(4,4)))
+})
+
+Given('the following {int}x{int} matrix A:', function (m: number, n: number, dataTable: DataTable) {
+  let numberRows = dataTable.raw().map(function(elem, i, data) {
+    return elem.map(function(elem, i, data) {
+      return parseFloat(elem)
+    })
+  })
+
+  A = new Matrix(m, n)
+
+  A.load(numberRows)
+});
+
+Then('determinant\\(A) = {float}', function (float) {
+  assert(A.determinant == float)
+})
+
+Then('submatrix\\(A, {int}, {int}) is the following {int}x{int} matrix:', function (subm, subn, m, n, dataTable: DataTable) {
+  let numberRows = dataTable.raw().map(function(elem, i, data) {
+    return elem.map(function(elem, i, data) {
+      return parseFloat(elem)
+    })
+  })
+
+  let res = new Matrix(m, n)
+  res.load(numberRows)
+
+  assert(A.submatrix(subm, subn).isEqual(res))
+})
+
+var B: Matrix
+
+Given('B ← submatrix\\(A, {int}, {int})', function (int, int2) {
+  B = A.submatrix(int, int2)
+})
+
+Then('determinant\\(B) = {float}', function (float) {
+  assert(B.determinant == float, `${B.determinant} != ${float}`)
+})
+
+Then('minor\\(A, {int}, {int}) = {float}', function (int, int2, float) {
+  assert(A.minor(int, int2) == float, `${A.minor(int, int2)} != ${float}`)
+});
+
+Then('cofactor\\(A, {int}, {int}) = {float}', function (int, int2, float) {
+  assert(A.cofactor(int, int2) == float, `${A.cofactor(int, int2)} != ${float}`)
+})
+
+Then('A is invertible', function () {
+  assert(A.invertible)
+})
+
+Then('A is not invertible', function () {
+  assert(!A.invertible)
+})
+
+Given('B ← inverse\\(A)', function () {
+  B = A.invert()
+})
+
+Then('B[{int},{int}] = {float}\\/{float}', function (int, int2, float, float2) {
+  assert(Math.abs(B.getCell(int, int2) - float/float2) < epsilon, `${B.getCell(int, int2)}`)
+})
+
+Then('B is the following {int}x{int} matrix:', function (m: number, n: number, dataTable: DataTable) {
+  let numberRows = dataTable.raw().map(function(elem, i, data) {
+    return elem.map(function(elem, i, data) {
+      return parseFloat(elem)
+    })
+  })
+
+  let res = new Matrix(m, n)
+  res.load(numberRows)
+
+  assert(B.isEqual(res))
+})
+
+Then('inverse\\(A) is the following {int}x{int} matrix:', function (m: number, n: number, dataTable: DataTable) {
+  let numberRows = dataTable.raw().map(function(elem, i, data) {
+    return elem.map(function(elem, i, data) {
+      return parseFloat(elem)
+    })
+  })
+
+  let res = new Matrix(m, n)
+  res.load(numberRows)
+
+  assert(A.invert().isEqual(res))
+})
+
+Given('the following {int}x{int} matrix B:', function (m: number, n: number, dataTable: DataTable) {
+  let numberRows = dataTable.raw().map(function(elem, i, data) {
+    return elem.map(function(elem, i, data) {
+      return parseFloat(elem)
+    })
+  })
+
+  B = new Matrix(m, n)
+  B.load(numberRows)
+});
+
+var C: Matrix
+
+Given('C ← A * B', function () {
+  C = A.multiplyMatrix(B)
+})
+
+Then('C * inverse\\(B) = A', function () {
+  assert(C.multiplyMatrix(B.invert()).isEqual(A))
 })
