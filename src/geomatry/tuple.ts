@@ -1,6 +1,6 @@
 import { Vector } from "./vector";
 
-const epsilon: number = 0.00001
+export const epsilon: number = 0.00001
 
 export class Tuple {
   x: number;

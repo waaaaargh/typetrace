@@ -1,7 +1,7 @@
 import { Given, Then, World } from '@cucumber/cucumber';
+import { assert } from 'chai';
 
 import { Tuple } from '../src/geomatry/tuple';
-import { assert } from 'chai';
 import { Point, isPoint } from '../src/geomatry/point';
 import { Vector, isVector } from '../src/geomatry/vector';
 import { Color } from '../src/geomatry/color';
