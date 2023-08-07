@@ -68,4 +68,8 @@ export class Tuple {
   schurproduct(t: Tuple): Tuple {
     return new Tuple(this.x * t.x, this.y * t.y, this.z * t.z, this.w * t.w)
   }
+
+  public toString(): string {
+    return `Tuple(${this.x}, ${this.y}, ${this.z}, ${this.w})`
+  }
 }

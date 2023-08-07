@@ -44,7 +44,7 @@ Then('a is not a vector', function() {
   assert(!isVector(a))
 });
 
-var p: Point
+export var p: Point
 
 Given('p ← point\\({float}, {float}, {float})', function (float, float2, float3) {
   p = new Point(float, float2, float3);
@@ -55,7 +55,7 @@ Then('p = tuple\\({float}, {float}, {float}, {float})', function (float, float2,
   assert((p as Tuple).isEqualTo(t))
 })
 
-var v: Vector
+export var v: Vector
 
 Given('v ← vector\\({float}, {float}, {float})', function (float, float2, float3) {
   v = new Vector(float, float2, float3);

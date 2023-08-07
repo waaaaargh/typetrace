@@ -1,5 +1,11 @@
 import { Tuple, epsilon } from "./tuple"
 
+export enum Axis {
+  X = 0,
+  Y = 1,
+  Z = 2
+}
+
 export class Matrix {
   private m: number
   private n: number
@@ -95,6 +101,20 @@ export class Matrix {
     return result
   }
 
+  multiplyTuple(t: Tuple): Tuple {
+    let tm = Matrix.fromTuple(t, true)
+    return this.multiplyMatrix(tm).toTuple()
+  }
+
+  toTuple(): Tuple {
+    return new Tuple(
+      this.numbers[0][0],
+      this.numbers[1][0],
+      this.numbers[2][0],
+      this.numbers[3][0],
+    )
+  }
+
   get determinant(): number {
     if(this.m == 2 && this.n == 2) {
       return this.numbers[0][0] * this.numbers[1][1] - this.numbers[0][1] * this.numbers[1][0]
@@ -169,4 +189,69 @@ export class Matrix {
 
     return res
   }
+
+  static translation(x: number, y: number, z: number): Matrix {
+    let res = Matrix.identity(4,4)
+
+    res.numbers[0][3] = x
+    res.numbers[1][3] = y
+    res.numbers[2][3] = z
+
+    return res
+  }
+
+  static scaling(x: number, y: number, z: number): Matrix {
+    let res = Matrix.identity(4,4)
+
+    res.numbers[0][0] = x
+    res.numbers[1][1] = y
+    res.numbers[2][2] = z
+
+    return res
+  }
+
+  static rotation(axis: Axis, angle: number): Matrix {
+    let res = Matrix.identity(4,4)
+
+    switch(axis) {
+      case Axis.X: {
+        res.numbers[1][1] = Math.cos(angle)
+        res.numbers[1][2] = -1 * Math.sin(angle)
+        res.numbers[2][1] = Math.sin(angle)
+        res.numbers[2][2] = Math.cos(angle)
+        break
+      }
+      case Axis.Y: {
+        res.numbers[0][0] = Math.cos(angle)
+        res.numbers[0][2] = Math.sin(angle)
+        res.numbers[2][0] = -1 * Math.sin(angle)
+        res.numbers[2][2] = Math.cos(angle)
+        break
+      }
+      case Axis.Z: {
+        res.numbers[0][0] = Math.cos(angle)
+        res.numbers[0][1] = -1 * Math.sin(angle)
+        res.numbers[1][0] = Math.sin(angle)
+        res.numbers[1][1] = Math.cos(angle)
+        break
+      }
+    }
+
+    return res
+  }
+
+  static shearing(xy: number,xz: number, yx: number, yz: number ,zx: number, zy: number) {
+    let res = Matrix.identity(4,4)
+
+    res.numbers[0][1] = xy
+    res.numbers[0][2] = xz
+    res.numbers[1][0] = yx
+    res.numbers[1][2] = yz
+    res.numbers[2][0] = zx
+    res.numbers[2][1] = zy
+
+    return res
+  }
+
 }
+
