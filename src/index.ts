@@ -1,28 +1,40 @@
 import { Axis, Matrix } from "./geomatry/matrix"
+import { GeometryObject, Sphere } from "./geomatry/object"
 import { Point } from "./geomatry/point"
+import { Ray } from "./geomatry/ray"
 import { Vector } from "./geomatry/vector"
 
-function drawPoint(ctx: CanvasRenderingContext2D, point: Point) {
-  ctx.fillRect(point.x, point.y, 1, 1)
-}
+function drawSphere(ctx: CanvasRenderingContext2D) {
+  const sphere = new Sphere()
+  sphere.transform = Matrix.shearing(1, 0, 0, 0, 0, 0)
+  const lightsource = new Point(0, 0, -15)
 
-function drawClock(ctx: CanvasRenderingContext2D) {
-  let center = new Point(400, 300, 0)
-  let r = 200
+  for(let i=0; i<800; i++) {
+    for(let j=0; j<600; j++) {
+      let target = new Point((j-300)/100, (i-400)/100, 10)
+      let ray = new Ray(
+        lightsource,
+        target.subtract(lightsource) as Vector
+      )
 
-  drawPoint(ctx, center)
+      let transformed_ray = ray.transform((sphere as GeometryObject).transform)
 
-  let v12 = new Vector(0, -1 * r, 0)
-  for(let i=0; i<12; i++) {
-    let t = Matrix.rotation(Axis.Z, i * ( (2 * Math.PI ) / 12) )
-    drawPoint(ctx, center.add(t.multiplyTuple(v12)))
+      let xs = sphere.intersect(transformed_ray)
+      if(xs.length == 0) {
+        ctx.fillStyle = "#000000"
+        ctx.fillRect(i, j, 1, 1)
+        continue
+      }
+
+      ctx.fillStyle = "#ff0000"
+      ctx.fillRect(i, j, 1, 1)
+    }
   }
 
+  console.log("done");
 }
 
-window.onload = function() {
-  let button = document.getElementById('renderbutton')
-
+function renderButtonPressed() {
   let canvas = document.getElementById('mycanvas') as HTMLCanvasElement
   if(canvas == null) {
     console.error("error getting canvas element")
@@ -35,5 +47,11 @@ window.onload = function() {
     return
   }
 
-  drawClock(ctx)
+  drawSphere(ctx)
+}
+
+window.onload = function() {
+  let button = document.getElementById('renderbutton') as HTMLButtonElement
+
+  button.onclick = renderButtonPressed
 }
