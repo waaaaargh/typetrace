@@ -12,6 +12,10 @@ export class Vector extends Tuple{
       this.x * t.y - this.y * t.x
     )
   }
+
+  reflect(n: Vector): Vector {
+    return this.subtract(n.multiply(2).multiply(this.dotproduct(n))) as Vector
+  }
 }
 
 export function isVector(t: Tuple): t is Vector {

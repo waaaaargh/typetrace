@@ -47,7 +47,7 @@ Then('position\\(r, {float}) = point\\({float}, {float}, {float})', function (fl
   assert(actual.isEqualTo(expected), `${actual} != ${expected}`)
 })
 
-var m: Matrix
+export var m: Matrix
 
 Given('m ← translation\\({float}, {float}, {float})', function (float, float2, float3) {
   m = Matrix.translation(float, float2, float3)

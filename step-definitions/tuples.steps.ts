@@ -1,4 +1,4 @@
-import { Given, Then, World } from '@cucumber/cucumber';
+import { Given, Then, When, World } from '@cucumber/cucumber';
 import { assert } from 'chai';
 
 import { Tuple } from '../src/geomatry/tuple';
@@ -226,3 +226,20 @@ Then('c1 * c2 = color\\({float}, {float}, {float})', function (float, float2, fl
   assert(c1.schurproduct(c2).isEqualTo(new Color(float, float2, float3)), `${c1.schurproduct(c2) as Color} != ${new Color(float, float2, float3)}`)
 });
 
+var n: Vector
+
+Given('n ← vector\\({float}, {float}, {float})', function (float, float2, float3) {
+  n = new Vector(float, float2, float3)
+})
+
+var r: Vector
+
+When('r ← reflect\\(v, n)', function () {
+  r = v.reflect(n)
+})
+
+Then('r = vector\\({float}, {float}, {float})', function (float, float2, float3) {
+  let actual = r
+  let expected = new Vector(float, float2, float3)
+  assert(actual.isEqualTo(expected), `${actual} != ${expected}`)
+})
