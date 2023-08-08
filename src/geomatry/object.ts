@@ -1,3 +1,4 @@
+import { Material } from "../material";
 import { Matrix } from "./matrix";
 import { Point } from "./point";
 import { Ray } from "./ray";
@@ -7,9 +8,11 @@ export type Intersections = [ ] | [ number ] | [ number, number ]
 
 export abstract class GeometryObject {
   transform: Matrix
+  material: Material
 
   constructor() {
     this.transform = Matrix.identity(4,4)
+    this.material = new Material()
   }
 
   abstract intersect(ray: Ray): Intersections

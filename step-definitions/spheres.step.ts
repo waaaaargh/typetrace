@@ -8,6 +8,7 @@ import { Vector } from '../src/geomatry/vector';
 import { Point } from '../src/geomatry/point';
 
 import { r } from './rays.step';
+import { Material } from '../src/material';
 
 var s: Sphere
 var xs: Intersections
@@ -92,4 +93,32 @@ Given('set_transform\\(s, m)', function () {
 
 Then('n = normalize\\(n)', function () {
   n = n.normalize() as Vector
+})
+
+var mmat: Material
+
+When('m ← s.material', function () {
+  mmat = s.material
+})
+
+Then('m = material\\()', function () {
+  let actual = mmat
+  let expected = new Material()
+
+  assert(JSON.stringify(actual) == JSON.stringify(expected), `${actual} != ${expected}`)
+})
+
+Given('m.ambient ← {float}', function (float) {
+  mmat.ambient = float
+})
+
+When('s.material ← m', function () {
+  s.material = mmat
+})
+
+Then('s.material = m', function () {
+  let actual = s.material
+  let expected = mmat
+
+  assert(JSON.stringify(actual) == JSON.stringify(expected), `${actual} != ${expected}`)
 })
