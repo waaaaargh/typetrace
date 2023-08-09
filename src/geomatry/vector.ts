@@ -1,4 +1,4 @@
-import { Tuple } from "./tuple";
+import { Tuple, epsilon } from "./tuple";
 
 export class Vector extends Tuple{
   constructor(x: number,y: number,z: number) {
@@ -13,11 +13,11 @@ export class Vector extends Tuple{
     )
   }
 
-  reflect(n: Vector): Vector {
-    return this.subtract(n.multiply(2).multiply(this.dotproduct(n))) as Vector
+  toString(): string {
+    return `Vector { x: ${this.x}, y: ${this.y}, z: ${this.z}, w: ${this.w} }`
   }
 }
 
 export function isVector(t: Tuple): t is Vector {
-  return t.w == 0.0
+  return t.w == 0
 }

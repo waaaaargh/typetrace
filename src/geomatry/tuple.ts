@@ -45,7 +45,7 @@ export class Tuple {
       this.x * scale,
       this.y * scale,
       this.z * scale,
-      this.w * scale,
+      this.w * scale
     )
   }
 
@@ -67,6 +67,10 @@ export class Tuple {
 
   schurproduct(t: Tuple): Tuple {
     return new Tuple(this.x * t.x, this.y * t.y, this.z * t.z, this.w * t.w)
+  }
+
+  reflect(n: Vector): Vector {
+    return this.subtract(n.multiply(2).multiply(this.dotproduct(n))) as Vector
   }
 
   public toString(): string {
